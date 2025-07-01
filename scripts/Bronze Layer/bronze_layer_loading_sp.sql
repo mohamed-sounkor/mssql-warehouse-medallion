@@ -1,3 +1,9 @@
+/*
+This script creates and uses stored procedures to load raw data from source CSV files into the bronze layer of the data warehouse.
+It includes a helper procedure for bulk loading CSV files into specified tables using the table name and file path as parameters, 
+and a main procedure that orchestrates the loading of multiple tables from different sources.
+*/
+
 -- Helper Procedure
 CREATE OR ALTER PROCEDURE bronze.bulk_load_csv
     @table_name NVARCHAR(256),   -- e.g., 'bronze.crm_cust_info'
