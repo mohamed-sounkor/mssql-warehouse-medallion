@@ -1,5 +1,5 @@
 -- This script creates the bronze layer tables in the database.
--- The tables definitions are based on the data model in the csb files provided.
+-- The tables definitions are based on the data model in the csv files provided.
 
 IF OBJECT_ID('bronze.crm_cust_info', 'U') IS NOT NULL
     DROP TABLE bronze.crm_cust_info;
