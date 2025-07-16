@@ -23,15 +23,20 @@ BEGIN
              ELSE 'N/A' END,
         cst_create_date,
         GETDATE()
-    FROM bronze.crm_cust_info
-    WHERE cst_create_date IS NOT NULL;
+    		FROM (
+			SELECT
+				*,
+				ROW_NUMBER() OVER (PARTITION BY cst_id ORDER BY cst_create_date DESC) AS flag_last
+			FROM bronze.crm_cust_info
+		) t
+		WHERE flag_last = 1 AND cst_id IS NOT NULL; -- Select the most recent record per customer
 
     INSERT INTO silver.crm_cust_info_quarantine
     SELECT
         CAST(cst_id AS VARCHAR), cst_key, cst_firstname, cst_lastname, cst_marital_status, cst_gndr,
         CAST(cst_create_date AS VARCHAR), 'Invalid or future create_date', GETDATE()
     FROM bronze.crm_cust_info
-    WHERE cst_create_date IS NULL;
+    WHERE cst_id IS NULL;
 
     -- CRM Product Info
     TRUNCATE TABLE silver.crm_prd_info;
