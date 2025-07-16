@@ -24,14 +24,14 @@ BEGIN
         cst_create_date,
         GETDATE()
     FROM bronze.crm_cust_info
-    WHERE cst_create_date IS NOT NULL AND cst_create_date <= GETDATE();
+    WHERE cst_create_date IS NOT NULL;
 
     INSERT INTO silver.crm_cust_info_quarantine
     SELECT
         CAST(cst_id AS VARCHAR), cst_key, cst_firstname, cst_lastname, cst_marital_status, cst_gndr,
         CAST(cst_create_date AS VARCHAR), 'Invalid or future create_date', GETDATE()
     FROM bronze.crm_cust_info
-    WHERE cst_create_date IS NULL OR cst_create_date > GETDATE();
+    WHERE cst_create_date IS NULL;
 
     -- CRM Product Info
     TRUNCATE TABLE silver.crm_prd_info;
@@ -154,3 +154,8 @@ BEGIN
     FROM bronze.erp_px_cat_g1v2
     WHERE id IS NULL OR cat IS NULL OR subcat IS NULL OR maintenance IS NULL;
 END
+GO
+
+
+EXEC silver.load_silver;
+GO
