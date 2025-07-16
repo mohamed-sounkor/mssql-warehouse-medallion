@@ -146,9 +146,12 @@ BEGIN
     INSERT INTO silver.erp_loc_a101
     SELECT
         REPLACE(cid, '-', ''),
-        CASE WHEN LOWER(TRIM(cntry)) IN ('us', 'usa', 'united states') THEN 'United States'
-             WHEN LOWER(TRIM(cntry)) IN ('de', 'germany') THEN 'Germany'
-             ELSE 'N/A' END,
+		CASE
+			WHEN TRIM(cntry) = 'DE' THEN 'Germany'
+			WHEN TRIM(cntry) IN ('US', 'USA') THEN 'United States'
+			WHEN TRIM(cntry) = '' OR cntry IS NULL THEN 'n/a'
+			ELSE TRIM(cntry)
+		END AS cntry, -- Normalize and Handle missing or blank country codes
         GETDATE()
     FROM bronze.erp_loc_a101
     WHERE cntry IS NOT NULL AND LTRIM(RTRIM(cntry)) <> '';
