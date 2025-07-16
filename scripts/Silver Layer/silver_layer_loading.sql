@@ -52,7 +52,8 @@ BEGIN
         CASE WHEN UPPER(TRIM(prd_line)) = 'M' THEN 'Mountain'
              WHEN UPPER(TRIM(prd_line)) = 'R' THEN 'Road'
              WHEN UPPER(TRIM(prd_line)) = 'T' THEN 'Touring'
-             ELSE 'Other Sales' END,
+             WHEN UPPER(TRIM(prd_line)) = 'S' THEN 'Other Sales'
+             ELSE 'N/A' END,
         CAST(prd_start_dt AS DATE),
         CAST(prd_end_dt AS DATE),
         GETDATE()
