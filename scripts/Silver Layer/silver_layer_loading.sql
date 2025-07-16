@@ -54,8 +54,11 @@ BEGIN
              WHEN UPPER(TRIM(prd_line)) = 'T' THEN 'Touring'
              WHEN UPPER(TRIM(prd_line)) = 'S' THEN 'Other Sales'
              ELSE 'N/A' END,
-        CAST(prd_start_dt AS DATE),
-        CAST(prd_end_dt AS DATE),
+        CAST(prd_start_dt AS DATE) AS prd_start_dt,
+		CAST(
+			LEAD(prd_start_dt) OVER (PARTITION BY prd_key ORDER BY prd_start_dt) - 1 
+			AS DATE
+		) AS prd_end_dt, -- Calculate end date as one day before the next start date
         GETDATE()
     FROM bronze.crm_prd_info
     WHERE prd_cost IS NOT NULL AND prd_cost >= 0;
