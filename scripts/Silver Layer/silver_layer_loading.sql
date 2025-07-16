@@ -83,9 +83,17 @@ BEGIN
         TRY_CAST(CAST(sls_order_dt AS CHAR(8)) AS DATE),
         TRY_CAST(CAST(sls_ship_dt AS CHAR(8)) AS DATE),
         TRY_CAST(CAST(sls_due_dt AS CHAR(8)) AS DATE),
-        sls_sales,
+        CASE 
+			WHEN sls_sales IS NULL OR sls_sales <= 0 OR sls_sales != sls_quantity * ABS(sls_price) 
+				THEN sls_quantity * ABS(sls_price)
+				ELSE sls_sales
+			END AS sls_sales, -- Recalculate sales if original value is missing or incorrect,
         sls_quantity,
-        sls_price,
+        CASE 
+			WHEN sls_price IS NULL OR sls_price <= 0 
+				THEN sls_sales / NULLIF(sls_quantity, 0)
+				ELSE sls_price  -- Derive price if original value is invalid
+			END AS sls_price,
         GETDATE()
     FROM bronze.crm_sales_details
     WHERE sls_sales IS NOT NULL AND sls_sales >= 0
