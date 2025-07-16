@@ -1,0 +1,14 @@
+[
+  {
+    "sls_ord_num": "SO69215",
+    "sls_prd_key": "TT-M928",
+    "sls_cust_id": 16864,
+    "sls_order_dt": "5489-01-01T00:00:00",
+    "sls_ship_dt": "2013-11-02T00:00:00",
+    "sls_due_dt": "2013-11-07T00:00:00",
+    "sls_sales": 5,
+    "sls_quantity": 1,
+    "sls_price": 5,
+    "dwh_create_date": "2025-07-16T12:56:44.8"
+  }
+]
