@@ -91,7 +91,9 @@ BEGIN
     WHERE sls_sales IS NOT NULL AND sls_sales >= 0
       AND sls_quantity IS NOT NULL AND sls_quantity >= 0
       AND sls_price IS NOT NULL AND sls_price >= 0
-      AND TRY_CAST(CAST(sls_order_dt AS CHAR(8)) AS DATE) IS NOT NULL;
+      AND TRY_CAST(CAST(sls_order_dt AS CHAR(8)) AS DATE) IS NOT NULL
+      AND TRY_CAST(CAST(sls_order_dt AS CHAR(8)) AS DATE) <= TRY_CAST(CAST(sls_ship_dt AS CHAR(8)) AS DATE)
+      AND TRY_CAST(CAST(sls_ship_dt AS CHAR(8)) AS DATE) <= TRY_CAST(CAST(sls_due_dt AS CHAR(8)) AS DATE);
 
     INSERT INTO silver.crm_sales_details_quarantine
     SELECT
@@ -103,7 +105,9 @@ BEGIN
     WHERE sls_sales IS NULL OR sls_sales < 0
        OR sls_quantity IS NULL OR sls_quantity < 0
        OR sls_price IS NULL OR sls_price < 0
-       OR TRY_CAST(CAST(sls_order_dt AS CHAR(8)) AS DATE) IS NULL;
+       OR TRY_CAST(CAST(sls_order_dt AS CHAR(8)) AS DATE) IS NULL
+       OR TRY_CAST(CAST(sls_order_dt AS CHAR(8)) AS DATE) > TRY_CAST(CAST(sls_ship_dt AS CHAR(8)) AS DATE)
+       OR TRY_CAST(CAST(sls_ship_dt AS CHAR(8)) AS DATE) > TRY_CAST(CAST(sls_due_dt AS CHAR(8)) AS DATE);
 
     -- ERP Customer AZ12
     TRUNCATE TABLE silver.erp_cust_az12;
